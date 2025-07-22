@@ -15,10 +15,10 @@ import CharacterInfoPage from "./pages/CharacterInfoPage";
 import CharactersPage from "./pages/CharactersPage";
 
 // Import new components
-import Login from "./components/Login";
-import Register from "./components/Register";
-import AdminPanel from "./components/AdminPanel";
-import { AuthProvider, AuthContext } from "./components/AuthContext";
+import Login from "./components/Login.jsx";
+import Register from "./components/Register.jsx";
+import AdminPanel from "./components/AdminPanel.jsx";
+import { AuthProvider, AuthContext } from "./components/AuthContext.jsx";
 import React from "react";
 
 const RequireAdmin = ({ children }) => {
