@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Root from "./pages/Root";
 import Header from "./components/Header";
@@ -14,6 +14,21 @@ import PeopleInfoPage from "./pages/PeopleInfoPage";
 import CharacterInfoPage from "./pages/CharacterInfoPage";
 import CharactersPage from "./pages/CharactersPage";
 
+// Import new components
+import Login from "./components/Login";
+import Register from "./components/Register";
+import AdminPanel from "./components/AdminPanel";
+import { AuthProvider, AuthContext } from "./components/AuthContext";
+import React from "react";
+
+const RequireAdmin = ({ children }) => {
+  const { user } = React.useContext(AuthContext);
+  if (!user || user.role !== "admin") {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
 const App = () => {
   const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
   const togglesidebar = useSidebarStore((state) => state.toggleSidebar);
@@ -21,56 +36,48 @@ const App = () => {
   const path = location.pathname === "/";
 
   return (
-    <>
-      {!path && <Sidebar />}
+    <AuthProvider>
+      <>
+        {!path && <Sidebar />}
 
-      <main className={`${isSidebarOpen ? "bg-active" : ""} opacityWrapper`}>
-        <div
-          onClick={togglesidebar}
-          className={`${isSidebarOpen ? "active" : ""} opacityBg`}
-        ></div>
-        {!path && <Header />}
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Root />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/anime/:id" element={<DetailPage />} />
-          <Route path="/animes/:category/:query?" element={<ListPage />} />
-          <Route path="/search" element={<SearchResult />} />
-          <Route path="/watch/:id" element={<WatchPage />} />
-          <Route path="/characters/:id" element={<CharactersPage />} />
-          <Route path="/people/:id" element={<PeopleInfoPage />} />
-          <Route path="/character/:id" element={<CharacterInfoPage />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </main>
-    </>
+        <main className={`${isSidebarOpen ? "bg-active" : ""} opacityWrapper`}>
+          <div
+            onClick={togglesidebar}
+            className={`${isSidebarOpen ? "active" : ""} opacityBg`}
+          ></div>
+          {!path && <Header />}
+          <ScrollToTop />
+          <Routes>
+            {/* Existing routes */}
+            <Route path="/" element={<Root />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/anime/:id" element={<DetailPage />} />
+            <Route path="/animes/:category/:query?" element={<ListPage />} />
+            <Route path="/search" element={<SearchResult />} />
+            <Route path="/watch/:id" element={<WatchPage />} />
+            <Route path="/characters/:id" element={<CharactersPage />} />
+            <Route path="/people/:id" element={<PeopleInfoPage />} />
+            <Route path="/character/:id" element={<CharacterInfoPage />} />
+            <Route path="*" element={<PageNotFound />} />
+
+            {/* New auth routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* Admin panel route protected by role */}
+            <Route
+              path="/admin"
+              element={
+                <RequireAdmin>
+                  <AdminPanel />
+                </RequireAdmin>
+              }
+            />
+          </Routes>
+        </main>
+      </>
+    </AuthProvider>
   );
 };
-
-// pages
-// /
-// /home
-// /:id
-// top-rated
-// most-popular
-// most-favotite
-// completed
-// recently-added
-// recently-updated
-// top-upcoming
-// subbed-anime
-// dubbed-anime
-// movie
-// tv
-// ova
-// ona
-// special
-// events
-// /genre/:genre
-//  /watch/:id?ep=${number}
-//  /character/:id
-//  /people/:id
-// filter
 
 export default App;
