@@ -18,7 +18,7 @@ import CharactersPage from "./pages/CharactersPage";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import AdminPanel from "./components/AdminPanel.jsx";
-import { AuthProvider, AuthContext } from "./components/AuthContext.jsx";
+import { AuthProvider, AuthContext } from "./components/AuthContext";
 import React from "react";
 
 const RequireAdmin = ({ children }) => {
