@@ -1,3 +1,5 @@
-export default function Login() {
-  return <h1>It works 🎉</h1>;
+function App() {
+  return <h1>Hello from App.jsx</h1>;
 }
+
+export default App;
